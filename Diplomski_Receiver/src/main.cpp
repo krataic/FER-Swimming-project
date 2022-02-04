@@ -97,23 +97,14 @@ void loop(){
   if (incomingData == 5) { // pokreni snimanje
     //Serial.println("Pokrecem snimanje");
     esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&incomingData, sizeof(incomingData));
-    if (state == ESP_OK) {
-      //Serial.println("Sent with success");
-    }
-    else {
-      //Serial.println("Error sending the data");
-    }
   }
   if (incomingData == 10) { // prekini stream, idi u sleep
     //Serial.println("Zaustavljam snimanje");
     i = 0;
     offset = 0;
     esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&incomingData, sizeof(incomingData));
-    if (state == ESP_OK) {
-      //Serial.println("Sent with success");
-    }
-    else {
-      //Serial.println("Error sending the data");
-    }
+  }
+  if (incomingData == 15) {
+    esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&incomingData, sizeof(incomingData));
   }
 }

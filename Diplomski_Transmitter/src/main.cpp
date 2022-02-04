@@ -11,6 +11,7 @@
 
 #define Threshold 40
 
+volatile bool batteryReadRequest{false};
 uint8_t myData{};
 volatile bool startStream{true};
 //uint8_t receiverAddress[] = {0x24,0x0A,0xC4,0xF9,0x28,0xDC}; // moj 2. esp32
@@ -34,6 +35,9 @@ void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
     
     esp_sleep_enable_touchpad_wakeup();
     esp_deep_sleep_start();
+  }
+  if (myData == 15) {
+    batteryReadRequest = 1;
   }
 }
 
@@ -92,10 +96,22 @@ void setup() {
 }
 
 void loop() {
+  if (batteryReadRequest) {
+    result = (float)checkBatteryCharge();
+    esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&result, sizeof(result));
+    if (state == ESP_OK) {
+      Serial.println("Sent with success");
+    }
+    else {
+      Serial.println("Error sending the data");
+    }
+    Serial.println(result);
+    batteryReadRequest = 0;
+  }
   if (startStream) {
-    digitalWrite(greenLED,LOW);
-    digitalWrite(redLED,HIGH);
-    digitalWrite(blueLED,HIGH);
+    digitalWrite(greenLED, HIGH);
+    digitalWrite(redLED, LOW);
+    digitalWrite(blueLED, LOW);
     result = read10ADS1246();
     esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&result, sizeof(result));
     if (state == ESP_OK) {
@@ -107,9 +123,9 @@ void loop() {
     Serial.println(result);
   }
   if (!startStream){
-    digitalWrite(greenLED,HIGH);
-    digitalWrite(redLED,LOW);
-    digitalWrite(blueLED,HIGH);
+    digitalWrite(greenLED, LOW);
+    digitalWrite(redLED, HIGH);
+    digitalWrite(blueLED, LOW);
     result = 0;
     /*esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&result, sizeof(result));
     if (state == ESP_OK) {
