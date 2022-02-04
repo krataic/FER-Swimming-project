@@ -68,6 +68,7 @@ uint8_t regSetup1{};
 uint8_t regSetup2{};
 uint8_t regSetup3{};
 uint8_t regSetup4{};
+uint16_t batteryCharge{};
 
 
 void pinDeclare (void) {
@@ -80,7 +81,12 @@ void pinDeclare (void) {
   pinMode(blueLED, OUTPUT);
   pinMode(redLED, OUTPUT);
   pinMode(vBattery, INPUT);
+}
 
+double checkBatteryCharge() {
+  batteryCharge = analogRead(vBattery);
+  batteryCharge = (double)batteryCharge * 1.1791;
+  return (double)batteryCharge;
 }
 
 void hardReset(void) {

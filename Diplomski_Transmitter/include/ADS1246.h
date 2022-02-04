@@ -26,6 +26,7 @@ static const uint8_t vBattery = 14;
 
 
 void pinDeclare (void);
+double checkBatteryCharge(void);
 void hardReset(void);
 void softReset(void);
 void drdyInterrupt(void);
