@@ -72,7 +72,7 @@ void setup() {
     //return;
   }
   SPI.begin(sck, miso, mosi, _cs);
-  SPI.beginTransaction(SPISettings(1200000,MSBFIRST,SPI_MODE1));
+  SPI.beginTransaction(SPISettings(1200000, MSBFIRST, SPI_MODE1));
   attachInterrupt(_drdy, drdyInterrupt, FALLING);
   
   // in here comes the delay for tcssc
@@ -84,9 +84,9 @@ void setup() {
   SPI.transfer(SDATAC);
   //SPI.transfer(RDATAC);
   SPI.transfer(SYNC);
-  digitalWrite(greenLED,LOW);
-  digitalWrite(redLED,HIGH);
-  digitalWrite(blueLED,HIGH);
+  digitalWrite(greenLED, HIGH);
+  digitalWrite(redLED, LOW);
+  digitalWrite(blueLED, LOW);
   digitalWrite(analogSwitch, LOW);
   /*touchAttachInterrupt(T3, callback, Threshold); // GPIO15 is touch sensitive pin*/
 }
