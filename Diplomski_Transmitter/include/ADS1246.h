@@ -17,11 +17,12 @@ static const int8_t mosi = 23;
 static const int8_t miso = 19;
 static const int8_t sck = 18;
 static const int8_t _cs = 5;
-static const uint8_t analogSwitch = 16;
+static const uint8_t analogSwitch = 17;
 static const uint8_t greenLED = 4;
 static const uint8_t blueLED = 0;
 static const uint8_t redLED = 2;
 static const uint8_t vBattery = 14;
+static const uint8_t powerSwitch = 22;
 
 
 

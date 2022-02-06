@@ -81,6 +81,8 @@ void pinDeclare (void) {
   pinMode(blueLED, OUTPUT);
   pinMode(redLED, OUTPUT);
   pinMode(vBattery, INPUT);
+  pinMode(powerSwitch, OUTPUT);
+  digitalWrite(powerSwitch, LOW);
 }
 
 double checkBatteryCharge() {

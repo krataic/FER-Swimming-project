@@ -49,7 +49,7 @@ def pokreniSnimanje():
 		arduino.write(bytes('5', 'utf-8'))
 		time.sleep(1)
 	if inicijalizacija == 0:
-		arduino = serial.Serial(port='COM13', baudrate=115200, timeout=.1)
+		arduino = serial.Serial(port='COM3', baudrate=115200, timeout=.1)
 		time.sleep(0.1)
 		inicijalizacija = 1
 		arduino.write(bytes('5', 'utf-8'))
@@ -89,6 +89,25 @@ def zaustaviSnimanje():
 		#t1.kill()
 		arduino.close()
 		inicijalizacija = 0
+		
+def ugasiUredaj():
+	global arduino
+	global inicijalizacija
+	if inicijalizacija:
+		arduino.write(bytes('20', 'utf-8'))
+		time.sleep(0.1)
+		arduino.close()
+		inicijalizacija = 0
+		
+def provjeriStanjeBaterije():
+	global arduino, inicijalizacija
+	arduino.write(bytes('15','utf-8'))
+	time.sleep(0.1)
+	stanjeBaterije = str(arduino.readline())
+	data = stanjeBaterije[2:][:-5]
+	arduino.close()
+	inicijalizacija = 0
+	print(data)
 	
 def plotTheRecord():
 	global name
@@ -132,6 +151,24 @@ plotSnimka = tk.Button(frame,
 				   bg = "blue",
                    command=plotTheRecord)
 plotSnimka.pack(side=tk.LEFT)
+
+ugasiUredaj1 = tk.Button(frame,
+                   text="Ugasi uredaj",
+				   width = 20,
+				   height = 2,
+				   fg = "yellow",
+				   bg = "blue",
+                   command=ugasiUredaj)
+ugasiUredaj1.pack(side=tk.LEFT)
+
+provjeriStanjeBaterije1 = tk.Button(frame,
+                   text="Stanje baterije?",
+				   width = 20,
+				   height = 2,
+				   fg = "yellow",
+				   bg = "blue",
+                   command=provjeriStanjeBaterije)
+provjeriStanjeBaterije1.pack(side=tk.LEFT)
 
 #configSnimanje = tk.
 

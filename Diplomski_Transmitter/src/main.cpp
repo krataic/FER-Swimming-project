@@ -29,19 +29,26 @@ void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
   if (myData == 5) {
     startStream = HIGH;
   }
-  if (myData == 10) {
+  if (myData == 10) { // stop data-stream, stay esp-now connected
     startStream = LOW;
-    esp_now_deinit();
-    
-    esp_sleep_enable_touchpad_wakeup();
-    esp_deep_sleep_start();
   }
-  if (myData == 15) {
+  if (myData == 15) { 
     batteryReadRequest = 1;
+  }
+  if (myData == 20) { // power-off the device
+    startStream = LOW;
+    digitalWrite(powerSwitch, HIGH);
   }
 }
 
-void initESP(void) {
+/*void callback(){
+  uint8_t poruka{120};
+  initESP();
+  Serial.println("Testpoint1");
+  esp_now_send(receiverAddress, (uint8_t*)&poruka, sizeof(poruka));
+}*/
+
+void setup() {
   pinDeclare();
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
@@ -81,18 +88,7 @@ void initESP(void) {
   digitalWrite(redLED,HIGH);
   digitalWrite(blueLED,HIGH);
   digitalWrite(analogSwitch, LOW);
-}
-
-void callback(){
-  uint8_t poruka{120};
-  initESP();
-  Serial.println("Testpoint1");
-  esp_now_send(receiverAddress, (uint8_t*)&poruka, sizeof(poruka));
-}
-
-void setup() {
-  initESP();
-  touchAttachInterrupt(T3, callback, Threshold); // GPIO15 is touch sensitive pin
+  /*touchAttachInterrupt(T3, callback, Threshold); // GPIO15 is touch sensitive pin*/
 }
 
 void loop() {
@@ -127,13 +123,12 @@ void loop() {
     digitalWrite(redLED, HIGH);
     digitalWrite(blueLED, LOW);
     result = 0;
-    /*esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&result, sizeof(result));
+    esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&result, sizeof(result));
     if (state == ESP_OK) {
       Serial.println("Sent with success");
     }
     else {
       Serial.println("Error sending the data");
-    }*/
+    }
   }
-  
 }
