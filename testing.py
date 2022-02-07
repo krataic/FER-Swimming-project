@@ -24,12 +24,12 @@ curve = p.plot()                        # create an empty "plot" (a curve to plo
 poljeVrijednosti = list()
 
 def threadStartRecording():
-    global t1
+	global t1
 	t1 = Thread(target=pokreniSnimanje)
 	t1.start()
 
 def threadPlot():
-    global t2
+	global t2
 	t2 = Thread(target=plotTheRecord)
 	t2.start()
 	
@@ -127,14 +127,18 @@ def provjeriStanjeBaterije():
 	print(data)
 	
 def plotTheRecord():
-	global name
+	global name, t2
 	X, Y = [], []
 	for line in open(name+'.txt', 'r'):
+		line.strip()
 		values = [float(s) for s in line.split()]
 		#X.append(values[0])
 		Y.append(values)
-	plt.plot(Y)
-	plt.show()
+	plt.plot(Y[:-1])
+	#plt.show()
+	plt.draw()
+	plt.pause(0.001)
+	input("Press [enter] to continue.")
 	
 izlaz = tk.Button(frame, 
                    text="QUIT", 
@@ -166,7 +170,7 @@ plotSnimka = tk.Button(frame,
 				   height = 2,
 				   fg = "yellow",
 				   bg = "blue",
-                   command=threadPlot)
+                   command=plotTheRecord)
 plotSnimka.pack(side=tk.LEFT)
 
 ugasiUredaj1 = tk.Button(frame,
