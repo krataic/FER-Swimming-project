@@ -23,14 +23,31 @@ curve = p.plot()                        # create an empty "plot" (a curve to plo
 
 poljeVrijednosti = list()
 
-def threadStartCSV():
+def threadStartRecording():
+    global t1
 	t1 = Thread(target=pokreniSnimanje)
 	t1.start()
 
 def threadPlot():
+    global t2
 	t2 = Thread(target=plotTheRecord)
 	t2.start()
 	
+def threadCheckBattery():
+    global t3
+    t3 = Thread(target=provjeriStanjeBaterije)
+    t3.start()
+
+def threadTurnOff():
+    global t4
+    t4 = Thread(target=ugasiUredaj)
+    t4.start()
+
+def threadStopRecording():
+    global t5
+    t5 = Thread(target=zaustaviSnimanje)
+    t5.start()
+
 def write_csv():
 	global arduino
 	ser_bytes = arduino.readline()
@@ -132,7 +149,7 @@ startSnimanje = tk.Button(frame,
 					width = 20,
 					height = 2,
 					fg = "green",
-					command=threadStartCSV)
+					command=threadStartRecording)
 startSnimanje.pack(side=tk.LEFT)
 
 stopSnimanje = tk.Button(frame,
@@ -140,7 +157,7 @@ stopSnimanje = tk.Button(frame,
 				   width = 20,
 				   height = 2,
 				   fg = "red",
-                   command=zaustaviSnimanje)
+                   command=threadStopRecording)
 stopSnimanje.pack(side=tk.LEFT)
 
 plotSnimka = tk.Button(frame,
@@ -149,7 +166,7 @@ plotSnimka = tk.Button(frame,
 				   height = 2,
 				   fg = "yellow",
 				   bg = "blue",
-                   command=plotTheRecord)
+                   command=threadPlot)
 plotSnimka.pack(side=tk.LEFT)
 
 ugasiUredaj1 = tk.Button(frame,
@@ -158,7 +175,7 @@ ugasiUredaj1 = tk.Button(frame,
 				   height = 2,
 				   fg = "yellow",
 				   bg = "blue",
-                   command=ugasiUredaj)
+                   command=threadTurnOff)
 ugasiUredaj1.pack(side=tk.LEFT)
 
 provjeriStanjeBaterije1 = tk.Button(frame,
@@ -167,7 +184,7 @@ provjeriStanjeBaterije1 = tk.Button(frame,
 				   height = 2,
 				   fg = "yellow",
 				   bg = "blue",
-                   command=provjeriStanjeBaterije)
+                   command=threadCheckBattery)
 provjeriStanjeBaterije1.pack(side=tk.LEFT)
 
 #configSnimanje = tk.
