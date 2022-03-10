@@ -1,0 +1,2 @@
+offset u ročitanoj vrijednosti: 800 000
+offset kao napon: cca 0.23

@@ -43,13 +43,6 @@ void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
   }
 }
 
-/*void callback(){
-  uint8_t poruka{120};
-  initESP();
-  Serial.println("Testpoint1");
-  esp_now_send(receiverAddress, (uint8_t*)&poruka, sizeof(poruka));
-}*/
-
 void setup() {
   //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable detector
   pinDeclare();
@@ -95,7 +88,6 @@ void setup() {
   digitalWrite(analogSwitch, LOW);
   startStream = 1;
   batteryReadRequest = 0;
-  //touchAttachInterrupt(T3, callback, Threshold); // GPIO15 is touch sensitive pin
 }
 
 void loop() {
