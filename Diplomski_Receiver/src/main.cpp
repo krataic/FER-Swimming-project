@@ -15,13 +15,15 @@ uint32_t offset{};
 // E8:68:E7:1A:B4:F8
 
 
-uint8_t receiverAddress[] = {0xE8,0x68,0xE7,0x1A,0xB4,0xF8}; // adresa ESP-a u bazenu
+//uint8_t receiverAddress[] = {0xE8,0x68,0xE7,0x1A,0xB4,0xF8}; // adresa ESP-a u bazenu
 //uint8_t receiverAddress[] = {0x24,0x0A,0xC4,0xF9,0x28,0xDC}; // moj 2. esp32
 //uint8_t receiverAddress[] = {0x24,0x0A,0xC4,0xEF,0x7D,0x28}; // moj 1. esp32
+uint8_t receiverAddress[] = {0xE8, 0x68, 0xE7, 0x2C, 0x5D, 0xBC}; //E8:68:E7:2C:5D:BC, wroom32u adresa
 
 void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
-  myData *= 100;
+  Serial.println(myData);
+  /*myData *= 100;
   myData2 = myData;
   myData3 = (myData2 * 5.0633); // prikaz sile u Newtonima
   i++;
@@ -34,7 +36,7 @@ void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
   if (i >= 501) {
     //myData3 -= offset;
     Serial.println(myData3);
-  }
+  }*/
   /*
   if (i < 200){
     i++;
@@ -66,7 +68,7 @@ void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 void vReceiverSetup(void){
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
-   if (esp_now_init() != ESP_OK) {
+  if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;
   }

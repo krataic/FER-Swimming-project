@@ -127,7 +127,8 @@ void vADSConfig(void) {
   //SPI.transfer(0x00); // 0||PGA[2:0]||DR[3:0], 0000 = 5 SPS
   //SPI.transfer(0x23); //PGA = 4, DR = 40 SPS
   //SPI.transfer(0x25); //PGA = 4, DR = 160 SPS
-  SPI.transfer(0x35); //PGA = 8, DR = 160 SPS
+  //SPI.transfer(0x35); //PGA = 8, DR = 160 SPS
+  SPI.transfer(0x05); //PGA = 1, DR = 160 SPS
 }
 
 void vADSConfig10 (void) {

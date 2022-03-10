@@ -1,13 +1,15 @@
 #include <Arduino.h>
-#include <FreeRTOS.h>
-#include <freertos/queue.h>
+//#include <FreeRTOS.h>
+/*#include <freertos/queue.h>
 #include <freertos/semphr.h>
-#include <freertos/task.h>
+#include <freertos/task.h>*/
 #include <ADS1246.h>
 #include <SPI.h>
 #include <WiFi.h>
 #include <esp_now.h>
 #include <esp_wifi.h>
+//#include "soc/soc.h"
+//#include "soc/rtc_cntl_reg.h"
 
 #define Threshold 40
 
@@ -15,7 +17,7 @@ volatile bool batteryReadRequest{false};
 uint8_t myData{};
 volatile bool startStream{true};
 //uint8_t receiverAddress[] = {0x24,0x0A,0xC4,0xF9,0x28,0xDC}; // moj 2. esp32
-uint8_t receiverAddress[] = {0x24,0x0A,0xC4,0xEF,0x7D,0x28}; // moj 1. esp32
+uint8_t receiverAddress[] = {0x24,0x0A,0xC4,0xEF,0x7D,0x28}; // moj 1. esp32 
 float result{};
 
 void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
@@ -49,13 +51,15 @@ void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
 }*/
 
 void setup() {
+  //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable detector
   pinDeclare();
   Serial.begin(115200);
+  Serial.println("Testni ispis");
   WiFi.mode(WIFI_STA);
-  if (esp_wifi_set_max_tx_power(78) != ESP_OK) {
+  /*if (esp_wifi_set_max_tx_power(78) != ESP_OK) {
     Serial.println("Error setting max tx power");
     return;
-  }
+  }*/
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;
@@ -76,9 +80,10 @@ void setup() {
   attachInterrupt(_drdy, drdyInterrupt, FALLING);
   
   // in here comes the delay for tcssc
+  Serial.println("Pocetak inita ads-a");
   vADSInit();
-  //vADSConfig();
-  vADSConfig10();
+  vADSConfig();
+  //vADSConfig10();
   vADSCheckRegisters();
   delayMicroseconds(1); // delay for tsccs
   SPI.transfer(SDATAC);
@@ -88,10 +93,15 @@ void setup() {
   digitalWrite(redLED, LOW);
   digitalWrite(blueLED, LOW);
   digitalWrite(analogSwitch, LOW);
-  /*touchAttachInterrupt(T3, callback, Threshold); // GPIO15 is touch sensitive pin*/
+  startStream = 1;
+  batteryReadRequest = 0;
+  //touchAttachInterrupt(T3, callback, Threshold); // GPIO15 is touch sensitive pin
 }
 
 void loop() {
+  //Serial.println("Echo");
+  //result = read10ADS1246();
+  //Serial.println(result);
   if (batteryReadRequest) {
     result = (float)checkBatteryCharge();
     esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&result, sizeof(result));
@@ -108,7 +118,8 @@ void loop() {
     digitalWrite(greenLED, HIGH);
     digitalWrite(redLED, LOW);
     digitalWrite(blueLED, LOW);
-    result = read10ADS1246();
+    //result = read10ADS1246();
+    result = readADS1246();
     esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&result, sizeof(result));
     if (state == ESP_OK) {
       Serial.println("Sent with success");
