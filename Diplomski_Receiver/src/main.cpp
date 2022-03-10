@@ -64,8 +64,8 @@ void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   //Serial.print("\r\nLast Packet Send Status:\t");
   //Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
-
-void vReceiverSetup(void){
+ 
+void setup(){
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   if (esp_now_init() != ESP_OK) {
@@ -84,13 +84,6 @@ void vReceiverSetup(void){
     //return;
   }
 }
- 
-void setup(){
-  vReceiverSetup();
-  //Serial.setTimeout(1);
-  //delay(2000);
-  //esp_now_send(receiverAddress, (uint8_t*)&incomingData, sizeof(incomingData)); // šalji podatak za početak mjerenja
-}
 
 void loop(){
   while(!Serial.available());
@@ -107,6 +100,9 @@ void loop(){
     esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&incomingData, sizeof(incomingData));
   }
   if (incomingData == 15) {
+    esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&incomingData, sizeof(incomingData));
+  }
+  if (incomingData == 20) {
     esp_err_t state = esp_now_send(receiverAddress, (uint8_t*)&incomingData, sizeof(incomingData));
   }
 }
