@@ -100,6 +100,11 @@ def updatePlot():
 def zaustaviSnimanje():
 	global arduino
 	global t1, inicijalizacija
+	if inicijalizacija == 0:
+		arduino = serial.Serial(port='COM3', baudrate=115200, timeout=.1)
+		time.sleep(0.1)
+		inicijalizacija = 1
+		time.sleep(0.5)
 	if inicijalizacija:
 		arduino.write(bytes('10', 'utf-8'))
 		time.sleep(0.1)
@@ -110,6 +115,11 @@ def zaustaviSnimanje():
 def ugasiUredaj():
 	global arduino
 	global inicijalizacija
+	if inicijalizacija == 0:
+		arduino = serial.Serial(port='COM3', baudrate=115200, timeout=.1)
+		time.sleep(0.1)
+		inicijalizacija = 1
+		time.sleep(0.5)
 	if inicijalizacija:
 		arduino.write(bytes('20', 'utf-8'))
 		time.sleep(0.1)
@@ -118,13 +128,19 @@ def ugasiUredaj():
 		
 def provjeriStanjeBaterije():
 	global arduino, inicijalizacija
-	arduino.write(bytes('15','utf-8'))
-	time.sleep(0.1)
-	stanjeBaterije = str(arduino.readline())
-	data = stanjeBaterije[2:][:-5]
-	arduino.close()
-	inicijalizacija = 0
-	print(data)
+	if inicijalizacija == 0:
+		arduino = serial.Serial(port='COM3', baudrate=115200, timeout=.1)
+		time.sleep(0.1)
+		inicijalizacija = 1
+		time.sleep(0.5)
+	if inicijalizacija:
+		arduino.write(bytes('15','utf-8'))
+		time.sleep(0.1)
+		stanjeBaterije = str(arduino.readline())
+		data = stanjeBaterije[2:][:-5]
+		arduino.close()
+		inicijalizacija = 0
+		print(data)
 	
 def plotTheRecord():
 	global name, t2
